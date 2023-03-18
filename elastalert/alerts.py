@@ -237,7 +237,11 @@ class Alerter(object):
 
     def get_aggregation_summary_text(self, matches):
         text = ''
-        if 'aggregation' in self.rule and 'summary_table_fields' in self.rule:
+        if 'aggregation' in self.rule and self.rule.get('summary_table_type') == 'jinja':
+            template_values = self.rule | {'matches':matches}
+            text = self.rule.get("jinja_template").render(
+                template_values | {self.rule['jinja_root_name']: template_values})
+        elif 'aggregation' in self.rule and 'summary_table_fields' in self.rule:
             summary_table_type = self.rule.get('summary_table_type', 'ascii')
 
             #Type independent prefix

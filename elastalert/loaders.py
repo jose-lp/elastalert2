@@ -456,7 +456,13 @@ class RulesLoader(object):
                 rule["jinja_template"] = self.jinja_environment.get_or_select_template(jinja_template_path)
             else:
                 rule["jinja_template"] = Template(str(rule.get('alert_text', '')))
-
+        elif rule.get('alert_text_type') == 'aggregation_summary_only' and rule.get('summary_table_type') == 'jinja':
+            jinja_template_path = rule.get('jinja_template_path')
+            if jinja_template_path:
+                rule["jinja_template"] = self.jinja_environment.get_or_select_template(jinja_template_path)
+            else:
+                rule["jinja_template"] = Template(str(rule.get('alert_text', '')))
+            
     def load_modules(self, rule, args=None):
         """ Loads things that could be modules. Enhancements, alerts and rule type. """
         # Set match enhancements
